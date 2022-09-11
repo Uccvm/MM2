@@ -1,41 +1,77 @@
-# Compiled Lua sources
-luac.out
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Project Slayers Nate Hub", "BloodTheme") -- CREATES THE WINDOW
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+-- { " Main " }
+local Mainfarms = Window:NewTab("Main")
+local MainSection = Main:NewSection("Main")
 
-# Precompiled Headers
-*.gch
-*.pch
+local DiscordSection = Window:NewTab("Discord")
+local DiscordSection = Discord:NewSection("Discord")
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+MainSection:NewSlider("walkspeed", "Slider to change your Walkspeed", 500, 27, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    getgenv().WalkSpeedValue = s; --set your desired walkspeed here
+    local Player = game:service'Players'.LocalPlayer;
+    Player.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+    Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+    end)
+    Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+  end)
+  
+  
+  MainSection:NewSlider("JumpPower", "Slider to change your JumpPower", 500, 50, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    getgenv().JumpPowerValue = s; --set your desired walkspeed here
+    local Player = game:service'Players'.LocalPlayer;
+    Player.Character.Humanoid:GetPropertyChangedSignal'JumpPower':Connect(function()
+    Player.Character.Humanoid.JumpPower = getgenv().JumpPowerValue;
+    end)
+    Player.Character.Humanoid.JumpPower = getgenv().JumpPowerValue;
+  end)
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+  MainSection:NewButton("Esp", "Makes you see players", function()
+    loadstring(game:HttpGet('https://pastebin.com/raw/kvr0AuWz'))()
+end)
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+MainSection:NewButton("X to noclip", "Press X so that you could noclip through walls", function()
+    local Players, RService = game:GetService("Players"), game:GetService("RunService");
+    local LocalP, Mouse = Players.LocalPlayer, Players.LocalPlayer:GetMouse();
+    local Rm, Index, NIndex, NCall, Caller = getrawmetatable(game), getrawmetatable(game).__index, getrawmetatable(game).__newindex, getrawmetatable(game).__namecall, checkcaller or is_protosmasher_caller
+    local NoClip, NoClipKey = false, "x" -- change 'x' to whatever you want
+    setreadonly(Rm, false)
+    
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/zxciaz/Universal-Scripts/main/Notification%20Function", true))()
+    Notify("Natehub", "Press F9 for Directions", "", 4);
+    warn("NoClip + Bypass made by Natehub");
+    warn("Press "..string.upper(NoClipKey).." to turn off and on NoClip");
+    
+    Rm.__newindex = newcclosure(function(self, Meme, Value)
+        if Caller() then return NIndex(self, Meme, Value) end 
+        if tostring(self) == "HumanoidRootPart" or tostring(self) == "Torso" then 
+            if Meme == "CFrame" and self:IsDescendantOf(LocalP.Character) then 
+                return true -- Credits to ze_lI for this
+            end
+        end
+        return NIndex(self, Meme, Value)
+    end)
+    setreadonly(Rm, true)
+    
+    RService.Stepped:Connect(function()
+        if NoClip == true and LocalP and LocalP.Character and LocalP.Character:FindFirstChild("Humanoid") then 
+            pcall(function()
+                LocalP.Character.Head.CanCollide = false 
+                LocalP.Character.Torso.CanCollide = false
+            end)
+        end
+    end)
+    
+    Mouse.KeyDown:Connect(function(Key)
+        if Key == NoClipKey then 
+            NoClip = not NoClip
+            Notify("Nate-Hub", "NoClip: "..tostring(NoClip), "", 3)
+        end
+    end)
+end)
 
+DiscordSection:NewButton("Discord", "https://discord.gg/vCzNfkcHJ7", function()
+	setclipboard('https://discord.gg/vCzNfkcHJ7')
+	end)
